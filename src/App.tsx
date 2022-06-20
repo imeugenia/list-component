@@ -1,24 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import List from "./List";
+import Header from "./Header";
+import data from "./data.json";
+import "./App.css";
+
+interface Person {
+  name: string;
+  description: string;
+  link: string | null;
+}
+
+const ListItemContent: React.FC<Person> = React.memo(
+  ({ name, description, link }) => (
+    <div>
+      <strong>{name}</strong>
+      <p>{description}</p>
+      {link && <a href={link}>{link}</a>}
+    </div>
+  )
+);
 
 function App() {
+  const [selected, setSelected] = React.useState<number[]>([]);
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(event.target.value);
+
+    if (selected.includes(value)) {
+      setSelected((prev) => prev.filter((item) => item !== value));
+    } else {
+      setSelected((prev) => [...prev, value]);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Header selected={selected} />
+      <main>
+        <List onChange={onChange}>
+          {data.map((item, index) => (
+            <ListItemContent key={index} {...item} />
+          ))}
+        </List>
+      </main>
     </div>
   );
 }
