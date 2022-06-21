@@ -5,7 +5,7 @@ const Header: React.FC<{ selected: number[] }> = ({ selected }) => {
     <header>
       <div role="status" aria-live="polite" aria-atomic="true">
         {selected.length === 0 ? (
-          "No items selected"
+          <span data-testid="empty-select">No items selected</span>
         ) : (
           <>
             Selected items:{" "}
